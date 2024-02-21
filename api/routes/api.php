@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('payments')->group(function () {
     Route::get('/', 'App\Http\Controllers\PaymentController@index');
     Route::post('/', 'App\Http\Controllers\PaymentController@store');
-    // Route::get('/{id}', 'App\Http\Controllers\PaymentController@show');
-    // Route::put('/{id}', 'App\Http\Controllers\PaymentController@update');
-    // Route::delete('/{id}', 'App\Http\Controllers\PaymentController@destroy');
+    Route::get('/{id}', 'App\Http\Controllers\PaymentController@show');
+    Route::patch('/{id}', 'App\Http\Controllers\PaymentController@update');
+    Route::delete('/{id}', 'App\Http\Controllers\PaymentController@destroy');
 });
