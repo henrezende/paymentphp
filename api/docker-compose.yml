@@ -4,9 +4,6 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            args:
-                user: henrique
-                uid: 1000
         image: digitalocean.com/php
         container_name: api
         restart: unless-stopped
@@ -34,6 +31,7 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
             MYSQL_PASSWORD: ${DB_PASSWORD}
             MYSQL_USER: ${DB_USERNAME}
+            DB_HOST: ${DB_HOST}
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
