@@ -84,9 +84,76 @@ class PaymentControllerTest extends TestCase
             ->assertJson(['message' => 'An error occurred while creating the payment']);
     }
 
+    public function test_show_method_returns_payment()
+    {
+        $payment = Payment::factory()->create();
+
+        $response = $this->getJson("/rest/payments/{$payment->id}");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'id',
+                'status',
+                'transaction_amount',
+                'installments',
+                'token',
+                'payment_method_id',
+                'payer' => [
+                    'entity_type',
+                    'type',
+                    'email',
+                    'identification' => [
+                        'type',
+                        'number',
+                    ],
+                ],
+                'notification_url',
+                'created_at',
+                'updated_at',
+            ]);
+    }
+
+    public function test_show_method_returns_not_found_for_invalid_id()
+    {
+        $response = $this->getJson('/rest/payments/123');
+
+        $response->assertStatus(404)
+            ->assertJson(['message' => 'Payment not found']);
+    }
+
+    public function test_index_method_returns_list_of_payments()
+    {
+        Payment::factory()->count(5)->create();
+
+        $response = $this->getJson('/rest/payments');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'status',
+                    'transaction_amount',
+                    'installments',
+                    'token',
+                    'payment_method_id',
+                    'payer' => [
+                        'entity_type',
+                        'type',
+                        'email',
+                        'identification' => [
+                            'type',
+                            'number',
+                        ],
+                    ],
+                    'notification_url',
+                    'created_at',
+                    'updated_at',
+                ],
+            ])
+            ->assertJsonCount(5);
+    }
+
     /* TODO: 
-    index
-    show
     update
     destroy
     */
