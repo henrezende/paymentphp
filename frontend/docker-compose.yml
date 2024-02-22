@@ -1,0 +1,14 @@
+version: "3"
+services:
+  frontend:
+    stdin_open: true
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /usr/app/node_modules
+      - /usr/app/.next
+      - .:/usr/app
+    ports:
+      - "3000:3000"
