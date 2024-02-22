@@ -8,9 +8,59 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Payment;
 
-
+/**
+ * @OA\Info(
+ *     title="PaymentPHP Swagger API documentation",
+ *     version="1.0.0",
+ *     @OA\Contact(
+ *         email="henrique@email.com"
+ *     ),
+ * )
+ */
 class PaymentController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/rest/payments",
+     *     summary="Retrieve a list of payments",
+     *     tags={"Payments"},
+     *     operationId="getPayments",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="string", example="84e8adbf-1a14-403b-ad73-d78ae19b59bf"),
+     *                 @OA\Property(property="status", type="string", example="PENDING"),
+     *                 @OA\Property(property="transaction_amount", type="number", format="float", example="245.90"),
+     *                 @OA\Property(property="installments", type="integer", format="int32", example="3"),
+     *                 @OA\Property(property="token", type="string", example="ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"),
+     *                 @OA\Property(property="payment_method_id", type="string", example="master"),
+     *                 @OA\Property(
+     *                     property="payer",
+     *                     type="object",
+     *                     @OA\Property(property="entity_type", type="string", example="individual"),
+     *                     @OA\Property(property="type", type="string", example="customer"),
+     *                     @OA\Property(property="email", type="string", example="example_random@gmail.com"),
+     *                     @OA\Property(
+     *                         property="identification",
+     *                         type="object",
+     *                         @OA\Property(property="type", type="string", example="CPF"),
+     *                         @OA\Property(property="number", type="string", example="12345678909"),
+     *                     ),
+     *                 ),
+     *                 @OA\Property(property="notification_url", type="string", example="https://webhook.site/unique-r"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-10T12:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-11T12:00:00Z"),
+     *             ),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function index()
     {
         $payments = Payment::all();
@@ -41,6 +91,57 @@ class PaymentController extends Controller
         return response()->json($formattedPayments);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/rest/payments",
+     *     summary="Create a new payment",
+     *     tags={"Payments"},
+     *     operationId="createPayment",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Payment details",
+     *         @OA\JsonContent(
+     *             required={"transaction_amount", "installments", "token", "payment_method_id", "payer"},
+     *             @OA\Property(property="transaction_amount", type="number", format="float", example="100.00"),
+     *             @OA\Property(property="installments", type="integer", format="int32", example="3"),
+     *             @OA\Property(property="token", type="string", example="ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"),
+     *             @OA\Property(property="payment_method_id", type="string", example="master"),
+     *             @OA\Property(
+     *                 property="payer",
+     *                 type="object",
+     *                 @OA\Property(property="entity_type", type="string", example="individual"),
+     *                 @OA\Property(property="type", type="string", example="customer"),
+     *                 @OA\Property(property="email", type="string", example="example_random@gmail.com"),
+     *                 @OA\Property(
+     *                     property="identification",
+     *                     type="object",
+     *                     @OA\Property(property="type", type="string", example="CPF"),
+     *                     @OA\Property(property="number", type="string", example="12345678909"),
+     *                 ),
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Payment created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="string", example="84e8adbf-1a14-403b-ad73-d78ae19b59bf"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-02-22T12:00:00Z"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object", example={"transaction_amount": {"The transaction amount field is required."}}),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function store(Request $request)
     {
         if (empty($request->all())) {
@@ -82,6 +183,59 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/rest/payments/{id}",
+     *     summary="Retrieve a payment by ID",
+     *     tags={"Payments"},
+     *     operationId="getPaymentById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the payment",
+     *         @OA\Schema(type="string", format="uuid"),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="string", example="84e8adbf-1a14-403b-ad73-d78ae19b59bf"),
+     *             @OA\Property(property="status", type="string", example="PENDING"),
+     *             @OA\Property(property="transaction_amount", type="number", format="float", example="245.90"),
+     *             @OA\Property(property="installments", type="integer", format="int32", example="3"),
+     *             @OA\Property(property="token", type="string", example="ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"),
+     *             @OA\Property(property="payment_method_id", type="string", example="master"),
+     *             @OA\Property(
+     *                 property="payer",
+     *                 type="object",
+     *                 @OA\Property(property="entity_type", type="string", example="individual"),
+     *                 @OA\Property(property="type", type="string", example="customer"),
+     *                 @OA\Property(property="email", type="string", example="example_random@gmail.com"),
+     *                 @OA\Property(
+     *                     property="identification",
+     *                     type="object",
+     *                     @OA\Property(property="type", type="string", example="CPF"),
+     *                     @OA\Property(property="number", type="string", example="12345678909"),
+     *                 ),
+     *             ),
+     *             @OA\Property(property="notification_url", type="string", example="https://webhook.site/unique-r"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-10T12:00:00Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-11T12:00:00Z"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Payment not found"),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function show($id)
     {
         $payment = Payment::find($id);
@@ -114,6 +268,43 @@ class PaymentController extends Controller
         return response()->json($formattedPayment);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/rest/payments/{id}",
+     *     summary="Update the status of a payment",
+     *     tags={"Payments"},
+     *     operationId="updatePaymentStatus",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the payment",
+     *         @OA\Schema(type="string", format="uuid"),
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Payment status",
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", example="PAID"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="No Content",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Payment not found"),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function update(Request $request, $id)
     {
         $payment = Payment::find($id);
@@ -132,6 +323,35 @@ class PaymentController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/rest/payments/{id}",
+     *     summary="Cancel a payment",
+     *     tags={"Payments"},
+     *     operationId="cancelPayment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the payment",
+     *         @OA\Schema(type="string", format="uuid"),
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="No Content",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Payment not found"),
+     *         ),
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
     public function destroy($id)
     {
         $payment = Payment::find($id);

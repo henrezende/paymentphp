@@ -1,0 +1,476 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PaymentPHP Swagger API documentation",
+        "contact": {
+            "email": "henrique@email.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/rest/payments": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Retrieve a list of payments",
+                "operationId": "getPayments",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "example": "84e8adbf-1a14-403b-ad73-d78ae19b59bf"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "PENDING"
+                                            },
+                                            "transaction_amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": "245.90"
+                                            },
+                                            "installments": {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "example": "3"
+                                            },
+                                            "token": {
+                                                "type": "string",
+                                                "example": "ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"
+                                            },
+                                            "payment_method_id": {
+                                                "type": "string",
+                                                "example": "master"
+                                            },
+                                            "payer": {
+                                                "properties": {
+                                                    "entity_type": {
+                                                        "type": "string",
+                                                        "example": "individual"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "customer"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "example_random@gmail.com"
+                                                    },
+                                                    "identification": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "CPF"
+                                                            },
+                                                            "number": {
+                                                                "type": "string",
+                                                                "example": "12345678909"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "notification_url": {
+                                                "type": "string",
+                                                "example": "https://webhook.site/unique-r"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-01-10T12:00:00Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-01-11T12:00:00Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Create a new payment",
+                "operationId": "createPayment",
+                "requestBody": {
+                    "description": "Payment details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "transaction_amount",
+                                    "installments",
+                                    "token",
+                                    "payment_method_id",
+                                    "payer"
+                                ],
+                                "properties": {
+                                    "transaction_amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "100.00"
+                                    },
+                                    "installments": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "example": "3"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"
+                                    },
+                                    "payment_method_id": {
+                                        "type": "string",
+                                        "example": "master"
+                                    },
+                                    "payer": {
+                                        "properties": {
+                                            "entity_type": {
+                                                "type": "string",
+                                                "example": "individual"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "customer"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "example_random@gmail.com"
+                                            },
+                                            "identification": {
+                                                "properties": {
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "CPF"
+                                                    },
+                                                    "number": {
+                                                        "type": "string",
+                                                        "example": "12345678909"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Payment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "84e8adbf-1a14-403b-ad73-d78ae19b59bf"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-02-22T12:00:00Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "transaction_amount": [
+                                                    "The transaction amount field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rest/payments/{id}": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Retrieve a payment by ID",
+                "operationId": "getPaymentById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "84e8adbf-1a14-403b-ad73-d78ae19b59bf"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "PENDING"
+                                        },
+                                        "transaction_amount": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": "245.90"
+                                        },
+                                        "installments": {
+                                            "type": "integer",
+                                            "format": "int32",
+                                            "example": "3"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "ae4e50b2a8f3h6d9f2c3a4b5d6e7f8g9"
+                                        },
+                                        "payment_method_id": {
+                                            "type": "string",
+                                            "example": "master"
+                                        },
+                                        "payer": {
+                                            "properties": {
+                                                "entity_type": {
+                                                    "type": "string",
+                                                    "example": "individual"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "customer"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "example_random@gmail.com"
+                                                },
+                                                "identification": {
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string",
+                                                            "example": "CPF"
+                                                        },
+                                                        "number": {
+                                                            "type": "string",
+                                                            "example": "12345678909"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "notification_url": {
+                                            "type": "string",
+                                            "example": "https://webhook.site/unique-r"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-01-10T12:00:00Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-01-11T12:00:00Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Cancel a payment",
+                "operationId": "cancelPayment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Update the status of a payment",
+                "operationId": "updatePaymentStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the payment",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payment status",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "PAID"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    }
+}
