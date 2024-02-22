@@ -2,15 +2,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 use App\Models\Payment;
 
 class PaymentControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_store_method_creates_payment()
     {
@@ -153,8 +152,39 @@ class PaymentControllerTest extends TestCase
             ->assertJsonCount(5);
     }
 
-    /* TODO: 
-    update
-    destroy
-    */
+    public function test_update_method_updates_payment_status()
+    {
+        $payment = Payment::factory()->create();
+        $newStatus = 'PAID';
+        $response = $this->patchJson("/rest/payments/{$payment->id}", ['status' => $newStatus]);
+
+        $payment->refresh();
+
+        $response->assertStatus(204)->assertNoContent();
+        $this->assertEquals($newStatus, $payment->status);
+    }
+
+    public function test_update_method_returns_not_found_for_invalid_id()
+    {
+        $response = $this->patchJson('/rest/payments/123', ['status' => 'PAID']);
+
+        $response->assertStatus(404)
+            ->assertJson(['message' => 'Bankslip not found with the specified id']);
+    }
+
+    public function test_destroy_method_cancels_payment()
+    {
+        $payment = Payment::factory()->create();
+        $response = $this->delete("/rest/payments/{$payment->id}");
+        $payment->refresh();
+
+        $response->assertStatus(204)->assertNoContent();
+        $this->assertEquals('CANCELED', $payment->status);
+    }
+
+    public function test_destroy_method_returns_not_found_for_invalid_id()
+    {
+        $response = $this->delete('/rest/payments/123');
+        $response->assertStatus(404)->assertJson(['message' => 'Payment not found with the specified id']);
+    }
 }
