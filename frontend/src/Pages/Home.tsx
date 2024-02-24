@@ -144,12 +144,12 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
 
   return (
     <>
-      <div className="p-4">
+      <div className="flex justify-center p-4">
         <form
-          className="flex flex-wrap px-8 py-8 bg-gray-50"
+          className="flex flex-wrap px-8 py-8 bg-gray-50 rounded-lg xl:max-w-7xl"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-wrap mb-4 w-1/2 px-4 content-start">
+          <div className="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start">
             <span className="mb-4 text-3xl font-bold">Dados do pagador</span>
             <div className="w-full mb-4">
               <label className="block mb-2">
@@ -170,7 +170,7 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
                 name="payerIdentificationType"
                 value={formData.payerIdentificationType}
                 onChange={handleInputChange}
-                className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 {identificationTypes.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -192,7 +192,7 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             </div>
           </div>
 
-          <div className="flex flex-wrap mb-4 w-1/2 px-4 content-start">
+          <div className="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start">
             <span className="mb-4 text-3xl font-bold">Dados do pagamento</span>
 
             <div className="w-full mb-4">
@@ -267,34 +267,32 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
               />
             </div>
             <div className="w-full mb-4">
-              <label className="block mb-2">
-                Select Installments:
-                <select
-                  name="selectedInstallments"
-                  value={formData.selectedInstallments}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
-                  required
-                >
-                  {formData.installmentOptions?.map((option) => (
-                    <option
-                      key={option.installment_amount}
-                      value={option.installment_amount.toString()}
-                    >
-                      {option.recommended_message}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <select
+                name="selectedInstallments"
+                value={formData.selectedInstallments}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-md bg-white"
+                required
+              >
+                <option label="Selecione o número de parcelas"></option>
+                {formData.installmentOptions?.map((option) => (
+                  <option
+                    key={option.installment_amount}
+                    value={option.installment_amount.toString()}
+                  >
+                    {option.recommended_message}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <div className="text-center w-full">
+          <div className="flex text-center justify-center w-full px-4">
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md"
+              className="bg-green-500 sm:w-full lg:w-1/2 text-white py-2 px-4 rounded-md"
             >
-              Create Payment
+              Pagar
             </button>
           </div>
         </form>
