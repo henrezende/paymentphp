@@ -9,9 +9,9 @@ import Home from './Pages/Home';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route index element={<Home />} />
-    </Route>
-  )
+      <Route index element={<Home />} />,
+    </Route>,
+  ),
 );
 
 function App() {

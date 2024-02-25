@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { initMercadoPago, getInstallments } from '@mercadopago/sdk-react';
 import { createCardToken } from '@mercadopago/sdk-react/coreMethods';
@@ -28,7 +26,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prevFormData: IPaymentForm) => ({
@@ -79,13 +77,18 @@ const NewPayment: React.FC<IPaymentForm> = () => {
       await createPayment(paymentData);
 
       toast.success('Pagamento criado com sucesso!', {
+        autoClose: 3000,
         position: 'top-right',
         theme: 'colored',
+        onClose: () => window.location.reload(),
       });
 
-      window.location.reload();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast.error(error.message, {
+      const errorMessage = Array.isArray(error)
+        ? error[0].message
+        : error.message;
+      toast.error(errorMessage, {
         position: 'top-right',
         theme: 'colored',
       });
@@ -99,42 +102,46 @@ const NewPayment: React.FC<IPaymentForm> = () => {
   ];
 
   useEffect(() => {
-    initMercadoPago(import.meta.env.MP_KEY);
+    initMercadoPago(import.meta.env.VITE_MP_KEY);
   }, []);
 
   useEffect(() => {
-    if (formData.transaction_amount && formData.card_number) {
+    if (
+      formData.transaction_amount &&
+      formData.card_number.toString().length === 16
+    ) {
+      const fetchInstallments = async () => {
+        try {
+          await getInstallments({
+            amount: formData.transaction_amount.toString(),
+            locale: 'pt-BR',
+            bin: formData.card_number,
+          }).then((installment_options) => {
+            const installmentOptionsFormatted =
+              installment_options?.[0]?.payer_costs?.map(
+                (opt: IInstallmentOption) => ({
+                  installment_amount: opt.installment_amount,
+                  recommended_message: opt.recommended_message,
+                  payment_method_option_id: opt.payment_method_option_id,
+                  installments: opt.installments,
+                }),
+              ) ?? [];
+
+            setFormData((prevFormData: IPaymentForm) => ({
+              ...prevFormData,
+              installment_options: installmentOptionsFormatted,
+              payment_method_id:
+                installment_options?.[0]?.payment_method_id ?? '',
+            }));
+          });
+        } catch (error) {
+          console.error('Error getting installment_options:', error);
+        }
+      };
+
       fetchInstallments();
     }
   }, [formData.transaction_amount, formData.card_number]);
-
-  const fetchInstallments = async () => {
-    try {
-      await getInstallments({
-        amount: formData.transaction_amount.toString(),
-        locale: 'pt-BR',
-        bin: formData.card_number,
-      }).then((installment_options) => {
-        const installmentOptionsFormatted =
-          installment_options?.[0]?.payer_costs?.map(
-            (opt: IInstallmentOption) => ({
-              installment_amount: opt.installment_amount,
-              recommended_message: opt.recommended_message,
-              payment_method_option_id: opt.payment_method_option_id,
-              installments: opt.installments,
-            })
-          ) ?? [];
-
-        setFormData((prevFormData: IPaymentForm) => ({
-          ...prevFormData,
-          installment_options: installmentOptionsFormatted,
-          payment_method_id: installment_options?.[0]?.payment_method_id ?? '',
-        }));
-      });
-    } catch (error) {
-      console.error('Error getting installment_options:', error);
-    }
-  };
 
   return (
     <>
@@ -217,6 +224,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Número do cartão"
+                maskPlaceholder={null}
                 required
               />
             </div>
