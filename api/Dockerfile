@@ -1,6 +1,5 @@
 FROM php:7.4-fpm
 
-# Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -19,16 +18,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy Laravel files
 COPY . .
 
-# Install Laravel dependencies
 RUN composer install
 
 EXPOSE 8000

@@ -1,0 +1,62 @@
+version: "3"
+services:
+  api:
+    build:
+      context: ./api
+    image: digitalocean.com/php
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/:/var/www/html
+      - ./api/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - paymentphp-network
+
+  frontend:
+    container_name: frontend
+    stdin_open: true
+    restart: always
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend/:/app
+      - /frontend/app/node_modules
+      - /frontend/app/.next
+    ports:
+      - "3000:3000"
+    networks:
+      - paymentphp-network
+
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      DB_HOST: ${DB_HOST}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./api/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - paymentphp-network
+
+networks:
+  paymentphp-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
