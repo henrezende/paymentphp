@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { initMercadoPago, getInstallments } from '@mercadopago/sdk-react';
 import CurrencyInput from 'react-currency-input-field';
 import InputMask from 'react-input-mask';
+import axios from '../../axios-config';
 
 interface InstallmentOption {
   recommended_message: string;
@@ -39,7 +40,6 @@ interface PayerCosts {
 }
 
 const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
-  // Initialize form data using the PaymentData interface
   const [formData, setFormData] = useState<PaymentData>({
     transactionAmount: '',
     installmentOptions: [],
@@ -79,25 +79,18 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Make an API request to create a new payment using formData
-    try {
-      const response = await fetch('/rest/payments', {
-        method: 'POST',
+    await axios
+      .post('/payments', JSON.stringify(formData), {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        // Handle success
+      })
+      .then(() => {
         console.log('Payment created successfully');
-      } else {
-        // Handle error
-        console.error('Failed to create payment');
-      }
-    } catch (error) {
-      console.error('Error creating payment:', error);
-    }
+      })
+      .catch((err) => {
+        console.error('Error creating payment:', err);
+      });
   };
 
   const identificationTypes = [
@@ -114,6 +107,7 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
       fetchInstallments();
     }
   }, [formData.transactionAmount, formData.cardNumber]);
+
   const fetchInstallments = async () => {
     try {
       await getInstallments({
