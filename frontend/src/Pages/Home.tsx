@@ -2,65 +2,36 @@
 
 import React, { useState, useEffect } from 'react';
 import { initMercadoPago, getInstallments } from '@mercadopago/sdk-react';
+import { createCardToken } from '@mercadopago/sdk-react/coreMethods';
 import CurrencyInput from 'react-currency-input-field';
 import InputMask from 'react-input-mask';
-import axios from '../../axios-config';
+import { createPayment } from '../api/api';
+import { IInstallmentOption, IPaymentForm } from '../interfaces/home';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface InstallmentOption {
-  recommended_message: string;
-  installment_amount: number;
-  payment_method_option_id: string;
-}
-
-// delete
-interface NewPaymentProps {
-  installmentOptions: InstallmentOption[];
-}
-
-interface PaymentData {
-  transactionAmount: string;
-  installmentOptions: InstallmentOption[];
-  token: string;
-  paymentMethodId: string;
-  cardNumber: string;
-  cardOwnerName: string;
-  expirationMonth: string;
-  expirationYear: string;
-  cvv: string;
-  selectedInstallments: string;
-  payerEmail: string;
-  payerIdentificationType: string;
-  payerIdentificationNumber: string;
-}
-
-interface PayerCosts {
-  installment_amount: number;
-  recommended_message: string;
-  payment_method_option_id: string;
-}
-
-const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
-  const [formData, setFormData] = useState<PaymentData>({
-    transactionAmount: '',
-    installmentOptions: [],
+const NewPayment: React.FC<IPaymentForm> = () => {
+  const [formData, setFormData] = useState<IPaymentForm>({
+    transaction_amount: '',
+    installment_options: [],
     token: '',
-    paymentMethodId: '',
-    payerEmail: '',
-    payerIdentificationType: '',
-    payerIdentificationNumber: '',
-    cardNumber: '',
-    cardOwnerName: '',
-    expirationMonth: '',
-    expirationYear: '',
-    cvv: '',
-    selectedInstallments: '',
+    payment_method_id: '',
+    payer_email: '',
+    payer_identification_type: '',
+    payer_identification_number: '',
+    card_number: '',
+    card_holder_name: '',
+    expiration_month: '',
+    expiration_year: '',
+    security_code: '',
+    selected_installments: 1,
   });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevFormData: PaymentData) => ({
+    setFormData((prevFormData: IPaymentForm) => ({
       ...prevFormData,
       [name]: value,
     }));
@@ -70,27 +41,56 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
     if (value) {
       const formattedValue = value.replace(/\./g, '').replace(',', '.');
 
-      setFormData((prevFormData: PaymentData) => ({
+      setFormData((prevFormData: IPaymentForm) => ({
         ...prevFormData,
-        transactionAmount: formattedValue,
+        transaction_amount: formattedValue,
       }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await axios
-      .post('/payments', JSON.stringify(formData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(() => {
-        console.log('Payment created successfully');
-      })
-      .catch((err) => {
-        console.error('Error creating payment:', err);
+
+    try {
+      const cardToken = await createCardToken({
+        cardNumber: formData.card_number,
+        cardholderName: formData.card_holder_name,
+        cardExpirationMonth: formData.expiration_month,
+        cardExpirationYear: formData.expiration_year,
+        securityCode: formData.security_code,
+        identificationType: formData.payer_identification_type,
+        identificationNumber: formData.payer_identification_number,
       });
+
+      const paymentData = {
+        transaction_amount: formData.transaction_amount,
+        installments: formData.selected_installments,
+        token: cardToken?.id,
+        payment_method_id: formData.payment_method_id,
+        payer: {
+          email: formData.payer_email,
+          identification: {
+            type: formData.payer_identification_type,
+            number: formData.payer_identification_number,
+          },
+        },
+      };
+
+      await createPayment(paymentData);
+
+      toast.success('Pagamento criado com sucesso!', {
+        position: 'top-right',
+        theme: 'colored',
+      });
+
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.message, {
+        position: 'top-right',
+        theme: 'colored',
+      });
+      console.error('Error creating payment:', error);
+    }
   };
 
   const identificationTypes = [
@@ -99,40 +99,40 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
   ];
 
   useEffect(() => {
-    initMercadoPago('TEST-b1968cca-0d6c-4498-a7c3-854d5901c8f8');
+    initMercadoPago(import.meta.env.MP_KEY);
   }, []);
 
   useEffect(() => {
-    if (formData.transactionAmount && formData.cardNumber) {
+    if (formData.transaction_amount && formData.card_number) {
       fetchInstallments();
     }
-  }, [formData.transactionAmount, formData.cardNumber]);
+  }, [formData.transaction_amount, formData.card_number]);
 
   const fetchInstallments = async () => {
     try {
       await getInstallments({
-        amount: formData.transactionAmount.toString(),
+        amount: formData.transaction_amount.toString(),
         locale: 'pt-BR',
-        bin: formData.cardNumber,
-      }).then((installmentOptions) => {
+        bin: formData.card_number,
+      }).then((installment_options) => {
         const installmentOptionsFormatted =
-          installmentOptions?.[0]?.payer_costs?.map((opt: PayerCosts) => ({
-            installment_amount: opt.installment_amount,
-            recommended_message: opt.recommended_message,
-            payment_method_option_id: opt.payment_method_option_id,
-          })) ?? [];
+          installment_options?.[0]?.payer_costs?.map(
+            (opt: IInstallmentOption) => ({
+              installment_amount: opt.installment_amount,
+              recommended_message: opt.recommended_message,
+              payment_method_option_id: opt.payment_method_option_id,
+              installments: opt.installments,
+            })
+          ) ?? [];
 
-        setFormData((prevFormData: PaymentData) => ({
+        setFormData((prevFormData: IPaymentForm) => ({
           ...prevFormData,
-          installmentOptions: installmentOptionsFormatted,
+          installment_options: installmentOptionsFormatted,
+          payment_method_id: installment_options?.[0]?.payment_method_id ?? '',
         }));
-        console.log(
-          'installmentOptionsFormatted:',
-          installmentOptionsFormatted
-        );
       });
     } catch (error) {
-      console.error('Error getting installmentOptions:', error);
+      console.error('Error getting installment_options:', error);
     }
   };
 
@@ -149,9 +149,9 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
               <label className="block mb-2">
                 <input
                   type="email"
-                  name="payerEmail"
+                  name="payer_email"
                   placeholder="E-mail do pagador"
-                  value={formData.payerEmail}
+                  value={formData.payer_email}
                   onChange={handleInputChange}
                   className="w-full p-2 border rounded-md"
                   required
@@ -160,12 +160,16 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             </div>
             <div className="w-full mb-4">
               <select
-                id="payerIdentificationType"
-                name="payerIdentificationType"
-                value={formData.payerIdentificationType}
+                id="payer_identification_type"
+                name="payer_identification_type"
+                value={formData.payer_identification_type}
                 onChange={handleInputChange}
                 className="appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
+                <option
+                  disabled
+                  label="Selecione o tipo de documento de identificação"
+                ></option>
                 {identificationTypes.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -176,8 +180,8 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             <div className="w-full mb-4">
               <input
                 type="text"
-                name="payerIdentificationNumber"
-                value={formData.payerIdentificationNumber}
+                name="payer_identification_number"
+                value={formData.payer_identification_number}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Número de identificação"
@@ -191,10 +195,10 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
 
             <div className="w-full mb-4">
               <CurrencyInput
-                id="transactionAmount"
-                name="transactionAmount"
+                id="transaction_amount"
+                name="transaction_amount"
                 prefix="R$"
-                value={formData.transactionAmount}
+                value={formData.transaction_amount}
                 onValueChange={(value) => handleTransactionAmountChange(value)}
                 className="w-full p-2 border rounded-md"
                 placeholder="Valor do pagamento"
@@ -207,9 +211,9 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             <div className="w-full mb-4">
               <InputMask
                 type="text"
-                name="cardNumber"
+                name="card_number"
                 mask="9999999999999999"
-                value={formData.cardNumber}
+                value={formData.card_number}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Número do cartão"
@@ -219,8 +223,8 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             <div className="w-full mb-4">
               <input
                 type="text"
-                name="cardOwnerName"
-                value={formData.cardOwnerName}
+                name="card_holder_name"
+                value={formData.card_holder_name}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Nome do titular"
@@ -228,32 +232,34 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
               />
             </div>
             <div className="w-full mb-4">
-              <input
+              <InputMask
                 type="text"
-                name="expirationMonth"
-                value={formData.expirationMonth}
+                name="expiration_month"
+                value={formData.expiration_month}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Mês de expiração (MM)"
+                mask="99"
                 required
               />
             </div>
             <div className="w-full mb-4">
-              <input
+              <InputMask
                 type="text"
-                name="expirationYear"
-                value={formData.expirationYear}
+                name="expiration_year"
+                value={formData.expiration_year}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="Ano de expiração (YYYY)"
+                mask="9999"
                 required
               />
             </div>
             <div className="w-full mb-4">
               <input
                 type="text"
-                name="cvv"
-                value={formData.cvv}
+                name="security_code"
+                value={formData.security_code}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
                 placeholder="CVV"
@@ -262,18 +268,18 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
             </div>
             <div className="w-full mb-4">
               <select
-                name="selectedInstallments"
-                value={formData.selectedInstallments}
+                name="selected_installments"
+                value={formData.selected_installments}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md bg-white"
                 required
               >
-                <option label="Selecione o número de parcelas"></option>
-                {formData.installmentOptions?.map((option) => (
-                  <option
-                    key={option.installment_amount}
-                    value={option.installment_amount.toString()}
-                  >
+                <option
+                  disabled
+                  label="Selecione o número de parcelas"
+                ></option>
+                {formData.installment_options?.map((option) => (
+                  <option key={option.installments} value={option.installments}>
                     {option.recommended_message}
                   </option>
                 ))}
@@ -291,6 +297,7 @@ const NewPayment: React.FC<NewPaymentProps> = ({ installmentOptions }) => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </>
   );
 };
