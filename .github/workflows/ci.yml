@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-docker-containers:
+    name: Test Docker Containers
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:20.10.7
+        options: --privileged
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker containers
+        run: |
+          docker compose build
+
+      - name: Run API tests
+        run: |
+          docker compose exec api php artisan test
+
+      - name: Run frontend tests
+        run: |
+          docker compose exec frontend npm test
+
+      - name: Run frontend lint
+        run: |
+          docker compose exec frontend npm run lint
