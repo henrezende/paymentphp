@@ -57,10 +57,26 @@ Após iniciar os contêineres, você pode acessar a documentação Swagger em ht
 
 O formulário ficará disponível em http://localhost:3000/
 
-#### Executar testes:
+#### Executar testes api:
 
 ```
 docker-compose exec api php artisan test
 ou
 docker compose exec api php artisan test
+```
+
+#### Executar testes frontend:
+
+```
+docker-compose exec frontend npm test
+ou
+docker compose exec frontend npm test
+```
+
+#### Executar lint frontend:
+
+```
+docker-compose exec frontend npm run lint
+ou
+docker compose exec frontend npm run lint
 ```
