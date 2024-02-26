@@ -157,6 +157,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
                 <input
                   type="email"
                   name="payer_email"
+                  data-testid="payer_email"
                   placeholder="E-mail do pagador"
                   value={formData.payer_email}
                   onChange={handleInputChange}
@@ -169,6 +170,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <select
                 id="payer_identification_type"
                 name="payer_identification_type"
+                data-testid="payer_identification_type"
                 value={formData.payer_identification_type}
                 onChange={handleInputChange}
                 className="appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -188,6 +190,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <input
                 type="text"
                 name="payer_identification_number"
+                data-testid="payer_identification_number"
                 value={formData.payer_identification_number}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
@@ -204,6 +207,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <CurrencyInput
                 id="transaction_amount"
                 name="transaction_amount"
+                data-testid="transaction_amount"
                 prefix="R$"
                 value={formData.transaction_amount}
                 onValueChange={(value) => handleTransactionAmountChange(value)}
@@ -219,6 +223,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <InputMask
                 type="text"
                 name="card_number"
+                data-testid="card_number"
                 mask="9999999999999999"
                 value={formData.card_number}
                 onChange={handleInputChange}
@@ -232,6 +237,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <input
                 type="text"
                 name="card_holder_name"
+                data-testid="card_holder_name"
                 value={formData.card_holder_name}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
@@ -243,6 +249,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <InputMask
                 type="text"
                 name="expiration_month"
+                data-testid="expiration_month"
                 value={formData.expiration_month}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
@@ -255,6 +262,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <InputMask
                 type="text"
                 name="expiration_year"
+                data-testid="expiration_year"
                 value={formData.expiration_year}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
@@ -267,6 +275,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
               <input
                 type="text"
                 name="security_code"
+                data-testid="security_code"
                 value={formData.security_code}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md"
@@ -277,6 +286,7 @@ const NewPayment: React.FC<IPaymentForm> = () => {
             <div className="w-full mb-4">
               <select
                 name="selected_installments"
+                data-testid="selected_installments"
                 value={formData.selected_installments}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded-md bg-white"
