@@ -1,0 +1,442 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NewPayment > new payment snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="flex justify-center p-4"
+      >
+        <form
+          class="flex flex-wrap px-8 py-8 bg-gray-50 rounded-lg xl:max-w-7xl"
+        >
+          <div
+            class="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start"
+          >
+            <span
+              class="mb-4 text-3xl font-bold"
+            >
+              Dados do pagador
+            </span>
+            <div
+              class="w-full mb-4"
+            >
+              <label
+                class="block mb-2"
+              >
+                <input
+                  class="w-full p-2 border rounded-md"
+                  data-testid="payer_email"
+                  name="payer_email"
+                  placeholder="E-mail do pagador"
+                  required=""
+                  type="email"
+                  value=""
+                />
+              </label>
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <select
+                class="appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                data-testid="payer_identification_type"
+                id="payer_identification_type"
+                name="payer_identification_type"
+              >
+                <option
+                  disabled=""
+                  label="Selecione o tipo de documento de identificação"
+                />
+                <option
+                  value="CPF"
+                >
+                  CPF
+                </option>
+                <option
+                  value="RG"
+                >
+                  RG
+                </option>
+              </select>
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="payer_identification_number"
+                name="payer_identification_number"
+                placeholder="Número de identificação"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start"
+          >
+            <span
+              class="mb-4 text-3xl font-bold"
+            >
+              Dados do pagamento
+            </span>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="transaction_amount"
+                id="transaction_amount"
+                inputmode="decimal"
+                name="transaction_amount"
+                placeholder="Valor do pagamento"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="card_number"
+                name="card_number"
+                placeholder="Número do cartão"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="card_holder_name"
+                name="card_holder_name"
+                placeholder="Nome do titular"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="expiration_month"
+                name="expiration_month"
+                placeholder="Mês de expiração (MM)"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="expiration_year"
+                name="expiration_year"
+                placeholder="Ano de expiração (YYYY)"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="security_code"
+                name="security_code"
+                placeholder="CVV"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="w-full mb-4"
+            >
+              <select
+                class="w-full p-2 border rounded-md bg-white"
+                data-testid="selected_installments"
+                name="selected_installments"
+                required=""
+              >
+                <option
+                  disabled=""
+                  label="Selecione o número de parcelas"
+                />
+              </select>
+            </div>
+          </div>
+          <div
+            class="flex text-center justify-center w-full px-4"
+          >
+            <button
+              class="bg-green-500 sm:w-full lg:w-1/2 text-white py-2 px-4 rounded-md"
+              type="submit"
+            >
+              Pagar
+            </button>
+          </div>
+        </form>
+      </div>
+      <div
+        class="Toastify"
+      />
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="flex justify-center p-4"
+    >
+      <form
+        class="flex flex-wrap px-8 py-8 bg-gray-50 rounded-lg xl:max-w-7xl"
+      >
+        <div
+          class="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start"
+        >
+          <span
+            class="mb-4 text-3xl font-bold"
+          >
+            Dados do pagador
+          </span>
+          <div
+            class="w-full mb-4"
+          >
+            <label
+              class="block mb-2"
+            >
+              <input
+                class="w-full p-2 border rounded-md"
+                data-testid="payer_email"
+                name="payer_email"
+                placeholder="E-mail do pagador"
+                required=""
+                type="email"
+                value=""
+              />
+            </label>
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <select
+              class="appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              data-testid="payer_identification_type"
+              id="payer_identification_type"
+              name="payer_identification_type"
+            >
+              <option
+                disabled=""
+                label="Selecione o tipo de documento de identificação"
+              />
+              <option
+                value="CPF"
+              >
+                CPF
+              </option>
+              <option
+                value="RG"
+              >
+                RG
+              </option>
+            </select>
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="payer_identification_number"
+              name="payer_identification_number"
+              placeholder="Número de identificação"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="flex flex-wrap mb-4 md:w-1/2 sm:w-full px-4 content-start"
+        >
+          <span
+            class="mb-4 text-3xl font-bold"
+          >
+            Dados do pagamento
+          </span>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="transaction_amount"
+              id="transaction_amount"
+              inputmode="decimal"
+              name="transaction_amount"
+              placeholder="Valor do pagamento"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="card_number"
+              name="card_number"
+              placeholder="Número do cartão"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="card_holder_name"
+              name="card_holder_name"
+              placeholder="Nome do titular"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="expiration_month"
+              name="expiration_month"
+              placeholder="Mês de expiração (MM)"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="expiration_year"
+              name="expiration_year"
+              placeholder="Ano de expiração (YYYY)"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <input
+              class="w-full p-2 border rounded-md"
+              data-testid="security_code"
+              name="security_code"
+              placeholder="CVV"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="w-full mb-4"
+          >
+            <select
+              class="w-full p-2 border rounded-md bg-white"
+              data-testid="selected_installments"
+              name="selected_installments"
+              required=""
+            >
+              <option
+                disabled=""
+                label="Selecione o número de parcelas"
+              />
+            </select>
+          </div>
+        </div>
+        <div
+          class="flex text-center justify-center w-full px-4"
+        >
+          <button
+            class="bg-green-500 sm:w-full lg:w-1/2 text-white py-2 px-4 rounded-md"
+            type="submit"
+          >
+            Pagar
+          </button>
+        </div>
+      </form>
+    </div>
+    <div
+      class="Toastify"
+    />
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
