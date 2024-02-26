@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker containers
         run: |
-          docker compose build
+          docker compose up --build -d
 
       - name: Run migrations
         run: |
