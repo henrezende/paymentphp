@@ -26,14 +26,19 @@ jobs:
         run: |
           docker compose build
 
+      - name: Run migrations
+        run: |
+          docker compose exec api php artisan migrate --rm
+
       - name: Run API tests
         run: |
-          docker compose exec api php artisan test
+          docker compose exec api php artisan test --rm
 
       - name: Run frontend tests
         run: |
-          docker compose exec frontend npm test
+          docker compose exec frontend npm test --rm
 
       - name: Run frontend lint
         run: |
-          docker compose exec frontend npm run lint
+          docker compose exec frontend npm run lint --rm
+          docker compose down
