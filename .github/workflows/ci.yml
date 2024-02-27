@@ -14,9 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      docker:
-        image: docker:25.0.3
-        options: --privileged
+      mysql:
+        image: mysql
+        ports:
+          - '3306:3306'
+        env:
+          MYSQL_ROOT_PASSWORD: jayatech
+          MYSQL_DATABASE: paymentphp
 
     steps:
       - name: Check out repository
@@ -24,11 +28,7 @@ jobs:
 
       - name: Build Docker containers
         run: |
-          docker compose build 
-
-      - name: Build Docker containers
-        run: |
-          docker compose up -d --wait --wait-timeout 30
+          docker compose up --build -d --wait --wait-timeout 30
 
       - name: Run migrations
         run: |
