@@ -22,7 +22,6 @@ jobs:
           MYSQL_USER: admin
           MYSQL_ROOT_PASSWORD: jayatech
           MYSQL_DATABASE: paymentphp
-        options: --health-cmd="mysql -u admin -pjayatech -e USE paymentphp;" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Check out repository
