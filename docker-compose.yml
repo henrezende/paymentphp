@@ -2,7 +2,8 @@ version: "3"
 services:
   api:
     build:
-      context: ./api
+      context: api
+      dockerfile: ./Dockerfile
     image: digitalocean.com/php
     container_name: api
     restart: unless-stopped
@@ -23,7 +24,8 @@ services:
     stdin_open: true
     restart: always
     build:
-      context: ./frontend
+      context: frontend
+      dockerfile: ./Dockerfile
     volumes:
       - ./frontend/:/app
       - /app/node_modules
