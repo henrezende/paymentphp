@@ -28,10 +28,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker containers
+        id: build-containers
         run: |
           docker compose up --build -d --wait
 
       - name: Run migrations
+        if: steps.build-containers.outcome == 'success'
         run: |
           docker compose run --rm api php artisan migrate
 
