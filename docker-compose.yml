@@ -16,7 +16,7 @@ services:
     volumes:
       - ./api/:/var/www/html
       - ./api/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - /var/www/vendor
+      - /var/www/html/vendor
     networks:
       - paymentphp-network
 
